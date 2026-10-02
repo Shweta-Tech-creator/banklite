@@ -1,0 +1,230 @@
+import '../models/account_model.dart';
+import '../models/beneficiary_model.dart';
+import '../models/bill_model.dart';
+import '../models/transaction_model.dart';
+import '../models/user_model.dart';
+
+class DummyData {
+  static final UserModel defaultUser = UserModel(
+    userId: 'USR_889201',
+    name: 'Sweta Kadam',
+    email: 'sweta.kadam@example.com',
+    phone: '+91 98765 43210',
+    accountNumber: 'BL-8839201948',
+    customerTier: 'Platinum Banking',
+    isKycVerified: true,
+    joinedDate: 'Jan 2024',
+  );
+
+  static List<Account> getInitialAccounts() => [
+        Account(
+          accountId: 'ACC_SAVINGS_01',
+          accountType: 'Savings Account',
+          accountNumber: '4892837491024892',
+          maskedNumber: '•••• 4892',
+          balance: 52450.00,
+          bankName: 'BankLite Main Branch',
+          ifscCode: 'BLTE0001234',
+        ),
+        Account(
+          accountId: 'ACC_CURRENT_02',
+          accountType: 'Current Account',
+          accountNumber: '9104827394829104',
+          maskedNumber: '•••• 9104',
+          balance: 18200.00,
+          bankName: 'BankLite Commercial Hub',
+          ifscCode: 'BLTE0001235',
+        ),
+      ];
+
+  static List<Beneficiary> getInitialBeneficiaries() => [
+        Beneficiary(
+          id: 'BEN_01',
+          name: 'Rahul Sharma',
+          accountNumber: '98726354117712',
+          maskedNumber: '•••• 7712',
+          bankName: 'HDFC Bank',
+          nickname: 'Rahul (College)',
+        ),
+        Beneficiary(
+          id: 'BEN_02',
+          name: 'Priya Patil',
+          accountNumber: '56473829103419',
+          maskedNumber: '•••• 3419',
+          bankName: 'State Bank of India',
+          nickname: 'Priya (Project)',
+        ),
+        Beneficiary(
+          id: 'BEN_03',
+          name: 'Ankit Verma',
+          accountNumber: '12398475626023',
+          maskedNumber: '•••• 6023',
+          bankName: 'ICICI Bank',
+          nickname: 'Ankit Roommate',
+        ),
+      ];
+
+  static List<TransactionItem> getInitialTransactions() => [
+        TransactionItem(
+          transactionId: 'BLTXN100234',
+          title: 'Amazon',
+          amount: 1299.00,
+          category: 'Shopping',
+          date: DateTime.now().subtract(const Duration(hours: 2, minutes: 15)),
+          type: TransactionType.debit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'Savings Account (•••• 4892)',
+          recipientOrSender: 'Amazon India Pvt Ltd',
+          note: 'Wireless mouse & stationery',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100233',
+          title: 'Salary',
+          amount: 45000.00,
+          category: 'Income',
+          date: DateTime.now().subtract(const Duration(days: 1, hours: 4)),
+          type: TransactionType.credit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'NEFT / Direct Deposit',
+          recipientOrSender: 'Apex Innovations Tech Ltd',
+          note: 'Monthly stipend & project bonus',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100232',
+          title: 'Electricity',
+          amount: 1850.00,
+          category: 'Bills',
+          date: DateTime.now().subtract(const Duration(days: 2, hours: 6)),
+          type: TransactionType.debit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'Savings Account (•••• 4892)',
+          recipientOrSender: 'Tata Power Ltd',
+          note: 'Utility bill for consumer #123456789',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100231',
+          title: 'Food',
+          amount: 450.00,
+          category: 'Food',
+          date: DateTime.now().subtract(const Duration(days: 3, hours: 1)),
+          type: TransactionType.debit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'UPI Quick Pay',
+          recipientOrSender: 'Green Leaf Cafe',
+          note: 'Team lunch meetup',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100230',
+          title: 'Netflix Subscription',
+          amount: 649.00,
+          category: 'Bills',
+          date: DateTime.now().subtract(const Duration(days: 4, hours: 8)),
+          type: TransactionType.debit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'Savings Account (•••• 4892)',
+          recipientOrSender: 'Netflix Entertainment',
+          note: 'Premium 4K plan monthly recurring',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100229',
+          title: 'Freelance UI Design',
+          amount: 12000.00,
+          category: 'Income',
+          date: DateTime.now().subtract(const Duration(days: 5, hours: 3)),
+          type: TransactionType.credit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'IMPS Direct Transfer',
+          recipientOrSender: 'Studio Nova Labs',
+          note: 'Milestone 2 dashboard UI screens',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100228',
+          title: 'Swiggy Gourmet',
+          amount: 580.00,
+          category: 'Food',
+          date: DateTime.now().subtract(const Duration(days: 6, hours: 5)),
+          type: TransactionType.debit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'Savings Account (•••• 4892)',
+          recipientOrSender: 'Swiggy Food Delivery',
+          note: 'Dinner order',
+        ),
+        TransactionItem(
+          transactionId: 'BLTXN100227',
+          title: 'Fuel Station',
+          amount: 1500.00,
+          category: 'Travel',
+          date: DateTime.now().subtract(const Duration(days: 7, hours: 2)),
+          type: TransactionType.debit,
+          status: TransactionStatus.successful,
+          paymentMethod: 'Debit Card (•••• 4892)',
+          recipientOrSender: 'Indian Oil Fuel Pump',
+          note: 'Vehicle refuel',
+        ),
+      ];
+
+  static List<BillCategory> getBillCategories() => [
+        BillCategory(
+          id: 'electricity',
+          name: 'Electricity',
+          icon: 'bolt',
+          providers: [
+            'Tata Power',
+            'Adani Electricity',
+            'BESCOM Bangalore',
+            'Torrent Power',
+            'Mahavitaran (MSEDCL)',
+          ],
+          defaultFee: 20.00,
+        ),
+        BillCategory(
+          id: 'mobile',
+          name: 'Mobile',
+          icon: 'smartphone',
+          providers: [
+            'Jio Prepaid / Postpaid',
+            'Airtel Mobile',
+            'Vodafone Idea (Vi)',
+            'BSNL Mobile',
+          ],
+          defaultFee: 0.00,
+        ),
+        BillCategory(
+          id: 'internet',
+          name: 'Internet',
+          icon: 'wifi',
+          providers: [
+            'Airtel Xstream Fiber',
+            'JioFiber Broadband',
+            'ACT Fibernet',
+            'Tata Play Fiber',
+            'Hathway Broadband',
+          ],
+          defaultFee: 15.00,
+        ),
+        BillCategory(
+          id: 'water',
+          name: 'Water',
+          icon: 'water_drop',
+          providers: [
+            'Municipal Water Board',
+            'Delhi Jal Board (DJB)',
+            'Bangalore BWSSB',
+            'Mumbai Municipal Corp (MCGM)',
+          ],
+          defaultFee: 10.00,
+        ),
+        BillCategory(
+          id: 'gas',
+          name: 'Gas',
+          icon: 'local_fire_department',
+          providers: [
+            'Mahanagar Gas Ltd (MGL)',
+            'Indraprastha Gas (IGL)',
+            'Adani Total Gas',
+            'Gujarat Gas Company',
+          ],
+          defaultFee: 10.00,
+        ),
+      ];
+}
