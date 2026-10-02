@@ -90,6 +90,3 @@ flutter test
 
 Released under the [MIT License](LICENSE).
 
-<p align="center">
-  <b>BankLite</b> — Designed and built with ❤️ by Shweta Kadam.
-</p>
