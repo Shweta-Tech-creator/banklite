@@ -5,7 +5,6 @@
 [![Figma](https://img.shields.io/badge/Design-Figma-F24E1E?logo=figma&logoColor=white)](https://www.figma.com/design/0ni6rdyIogiQTzIvoB65dM/banklite?node-id=0-1&t=tdvMffsIun8SiRXt-1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **B.Tech CSE & AI — Cross Platform Application (Problem Statement 79)**  
 > A simplified Flutter banking app for transfers, bills, budgets & statements — powered by Firebase.
 
 <p align="center">
