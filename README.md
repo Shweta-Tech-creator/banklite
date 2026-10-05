@@ -5,7 +5,6 @@
 [![Figma](https://img.shields.io/badge/Design-Figma-F24E1E?logo=figma&logoColor=white)](https://www.figma.com/design/0ni6rdyIogiQTzIvoB65dM/banklite?node-id=0-1&t=tdvMffsIun8SiRXt-1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **B.Tech CSE & AI — Cross Platform Application (Problem Statement 79)**  
 > A simplified Flutter banking app for transfers, bills, budgets & statements — powered by Firebase.
 
 <p align="center">
@@ -21,6 +20,8 @@
 ---
 
 ## 📱 App Interface
+
+*Featuring our award-winning **Neo-Luxe Sapphire & Glass** design system — combining deep obsidian navy, royal sapphire gradients, micro-etched gold EMV chips, and frosted glassmorphic cards.*
 
 ### Core Banking Flow
 | Home Dashboard | Transfer Funds | Pay Utility Bills | Budget Insights |
@@ -38,14 +39,14 @@
 
 | Feature | Details |
 |---|---|
-| 💳 **Clean Dashboard** | Dual-account switching, balance hide/show toggle, spending goal bar |
-| 💸 **Fast Transfers** | Beneficiary carousel, quick amount chips (₹500–₹5000), instant validation |
-| 💡 **Utility Bills** | Electricity, Mobile, Broadband, Water — with fee breakdown & ledger logging |
-| 📊 **Budget Insights** | Category-wise spending bars (Food, Shopping, Bills, Travel) |
-| 📄 **PDF & Excel Statements** | Certified e-statements with date filters, downloadable on-device |
-| 🔍 **Searchable Ledger** | Filter by All / Income / Expense / Bills, live search by payee or reference ID |
-| 🔐 **Security** | Firebase Auth, biometric unlock, 256-bit session, KYC badge |
-| ☁️ **Firebase Firestore** | All data (accounts, transactions, bills, statements) stored per-user in cloud |
+| 💳 **Neo-Luxe Dashboard** | Photorealistic brushed gold EMV smart chip, dual-account switcher, balance privacy toggle |
+| 💸 **Fast Transfers** | Beneficiary carousel, quick amount chips (₹500–₹5000), instant balance checks |
+| 💡 **Utility Bills** | Electricity, Mobile, Broadband, Water — real-time fee breakdown & auto-ledger logging |
+| 📊 **Budget Insights** | Visual spending health bars (Food, Shopping, Bills, Travel) with budget caps |
+| 📄 **PDF & Excel Statements** | Certified e-statements with custom date filters, generated client-side |
+| 🔍 **Searchable Ledger** | Filter by All / Income / Expense / Bills, instant search by payee or reference ID |
+| 🔐 **Security & Biometrics** | Firebase Auth, biometric login, 256-bit session encryption, KYC verified badge |
+| ☁️ **Firebase Firestore** | All data (accounts, transactions, bills, statements) isolated per-user in cloud |
 
 ---
 
@@ -89,7 +90,3 @@ flutter test
 ## 📜 License
 
 Released under the [MIT License](LICENSE).
-
-<p align="center">
-  <b>BankLite</b> — Designed and built with ❤️ by Shweta Kadam.
-</p>

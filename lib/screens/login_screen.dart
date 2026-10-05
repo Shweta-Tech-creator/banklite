@@ -75,9 +75,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid credentials. Please check your email and password.'),
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.white, size: 20),
+                SizedBox(width: 8),
+                Expanded(child: Text('Invalid credentials. Please check your email and password.')),
+              ],
+            ),
             backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -130,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           SnackBar(
                             content: Text('Password reset instructions sent to ${emailCtrl.text}!'),
                             backgroundColor: AppColors.successDark,
+                            behavior: SnackBarBehavior.floating,
                           ),
                         );
                       }
@@ -179,21 +188,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     decoration: const InputDecoration(labelText: 'Full Name', prefixIcon: Icon(Icons.person_outline)),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Please enter your name' : null,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   TextFormField(
                     controller: emailCtrl,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(labelText: 'Email Address', prefixIcon: Icon(Icons.email_outlined)),
                     validator: (v) => (v == null || !v.contains('@')) ? 'Please enter a valid email' : null,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   TextFormField(
                     controller: phoneCtrl,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(labelText: 'Mobile Number', prefixIcon: Icon(Icons.phone_outlined)),
-                    validator: (v) => (v == null || v.length < 10) ? 'Please enter valid phone number' : null,
+                    decoration: const InputDecoration(labelText: 'Mobile Phone', prefixIcon: Icon(Icons.phone_outlined)),
+                    validator: (v) => (v == null || v.length < 10) ? 'Enter 10-digit mobile number' : null,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   TextFormField(
                     controller: passCtrl,
                     obscureText: true,
@@ -229,6 +238,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               SnackBar(
                                 content: Text('Welcome to BankLite, ${nameCtrl.text}! Account created.'),
                                 backgroundColor: AppColors.successDark,
+                                behavior: SnackBarBehavior.floating,
                               ),
                             );
                             Navigator.of(context).pushReplacement(
@@ -263,363 +273,412 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return ResponsiveWrapper(
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC), // Slate 50 ultra clean background
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 16.0),
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Brand Logo & Header Visual
-                        const BankLogoEmblem(
-                          size: 70,
-                          showGlowHalo: true,
-                        ),
-
-                        const SizedBox(height: 12),
-
-                        const Text(
-                          'BankLite',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryNavy,
-                            letterSpacing: -0.5,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFFEEF4FF), // Ambient aurora wash
+                Color(0xFFF6F8FC), // Clean pearl slate
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 16.0),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Brand Logo & Header Visual with Glowing Halo
+                          const BankLogoEmblem(
+                            size: 72,
+                            showGlowHalo: true,
                           ),
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'Simple. Secure. Smarter Banking.',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w500,
+
+                          const SizedBox(height: 14),
+
+                          const Text(
+                            'BankLite',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryNavy,
+                              letterSpacing: -0.6,
+                            ),
                           ),
-                        ),
-
-                        const SizedBox(height: 22),
-
-                        // Login Form Card
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(22),
-                            border: Border.all(color: const Color(0xFFE2E8F0)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.03),
-                                blurRadius: 14,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Simple. Secure. Smarter Banking.',
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Welcome Back',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
-                                  letterSpacing: -0.3,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Sign in to access your accounts & insights',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
 
-                              const SizedBox(height: 18),
+                          const SizedBox(height: 24),
 
-                              // Email or Mobile Number Field
-                              const Text(
-                                'Email or Mobile Number',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
-                                ),
+                          // Floating Elevated Login Form Card
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(22),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(26),
+                              border: Border.all(
+                                color: AppColors.cardBorder.withValues(alpha: 0.9),
+                                width: 1.0,
                               ),
-                              const SizedBox(height: 6),
-                              TextFormField(
-                                controller: _emailPhoneController,
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  hintText: 'e.g. user@banklite.com or 9876543210',
-                                  prefixIcon: Container(
-                                    margin: const EdgeInsets.all(8),
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.softBlueBg,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Icon(Icons.person_outline_rounded, size: 18, color: AppColors.accentBlue),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF0F172A).withValues(alpha: 0.05),
+                                  blurRadius: 22,
+                                  offset: const Offset(0, 8),
+                                ),
+                                BoxShadow(
+                                  color: AppColors.accentBlue.withValues(alpha: 0.04),
+                                  blurRadius: 30,
+                                  offset: const Offset(0, 12),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Welcome Back',
+                                  style: TextStyle(
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.textPrimary,
+                                    letterSpacing: -0.4,
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter your registered email or mobile number';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              const SizedBox(height: 14),
-
-                              // Password Field
-                              const Text(
-                                'Password',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              TextFormField(
-                                controller: _passwordController,
-                                obscureText: !_isPasswordVisible,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter your account password',
-                                  prefixIcon: Container(
-                                    margin: const EdgeInsets.all(8),
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.softBlueBg,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Icon(Icons.lock_outline_rounded, size: 18, color: AppColors.accentBlue),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                                      size: 20,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isPasswordVisible = !_isPasswordVisible;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your password';
-                                  }
-                                  if (value.length < 4) {
-                                    return 'Password must be at least 4 characters';
-                                  }
-                                  return null;
-                                },
-                              ),
-
-                              const SizedBox(height: 12),
-
-                              // Remember Me & Forgot Password (Clean Spaced Row)
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _rememberMe = !_rememberMe;
-                                        });
-                                      },
-                                      borderRadius: BorderRadius.circular(6),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SizedBox(
-                                            width: 18,
-                                            height: 18,
-                                            child: Checkbox(
-                                              value: _rememberMe,
-                                              activeColor: AppColors.accentBlue,
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  _rememberMe = val ?? false;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          const Flexible(
-                                            child: Text(
-                                              'Remember Me',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppColors.textSecondary,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: _showForgotPasswordDialog,
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    child: const Text(
-                                      'Forgot Password?',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.accentBlue,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              // Login Button & Biometric Row
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: _isLoading ? null : _handleLogin,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF0F172A),
-                                        foregroundColor: Colors.white,
-                                        minimumSize: const Size(double.infinity, 50),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(14),
-                                        ),
-                                        elevation: 0,
-                                      ),
-                                      child: _isLoading
-                                          ? const SizedBox(
-                                              width: 22,
-                                              height: 22,
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2.5,
-                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                              ),
-                                            )
-                                          : const FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    'Login to Account',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 8),
-                                                  Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
-                                                ],
-                                              ),
-                                            ),
-                                      ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  // Quick Biometric Unlock Button
-                                  InkWell(
-                                    onTap: _handleLogin,
-                                    borderRadius: BorderRadius.circular(14),
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.softBlueBg,
-                                        borderRadius: BorderRadius.circular(14),
-                                        border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.35)),
-                                      ),
-                                      child: const Icon(
-                                        Icons.fingerprint_rounded,
-                                        color: AppColors.accentBlue,
-                                        size: 28,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        // Create Account Section
-                        Center(
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              const Text(
-                                "Don't have an account? ",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: _showCreateAccountDialog,
-                                child: const Text(
-                                  'Create Account',
+                                const SizedBox(height: 4),
+                                const Text(
+                                  'Sign in to access your accounts & insights',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.accentBlue,
+                                    color: AppColors.textSecondary,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
 
-                        const SizedBox(height: 16),
+                                const SizedBox(height: 20),
 
-                        // 256-bit SSL Security Footnote
-                        Center(
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            spacing: 6,
-                            children: [
-                              const Icon(Icons.shield_outlined, size: 14, color: AppColors.textMuted),
-                              Text(
-                                'Bank-grade 256-bit end-to-end encrypted',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: AppColors.textMuted.withValues(alpha: 0.9),
-                                  fontWeight: FontWeight.w500,
+                                // Email or Mobile Number Field
+                                const Text(
+                                  'Email or Mobile Number',
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimary,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 7),
+                                TextFormField(
+                                  controller: _emailPhoneController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                    fillColor: AppColors.surfaceSubtle,
+                                    filled: true,
+                                    hintText: 'e.g. user@banklite.com or 9876543210',
+                                    prefixIcon: Container(
+                                      margin: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.softBlueBg,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Icon(Icons.person_outline_rounded, size: 18, color: AppColors.accentBlue),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Please enter your registered email or mobile number';
+                                    }
+                                    return null;
+                                  },
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                // Password Field
+                                const Text(
+                                  'Password',
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(height: 7),
+                                TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: !_isPasswordVisible,
+                                  decoration: InputDecoration(
+                                    fillColor: AppColors.surfaceSubtle,
+                                    filled: true,
+                                    hintText: 'Enter your account password',
+                                    prefixIcon: Container(
+                                      margin: const EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.softBlueBg,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Icon(Icons.lock_outline_rounded, size: 18, color: AppColors.accentBlue),
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isPasswordVisible ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                                        size: 20,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isPasswordVisible = !_isPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your password';
+                                    }
+                                    if (value.length < 4) {
+                                      return 'Password must be at least 4 characters';
+                                    }
+                                    return null;
+                                  },
+                                ),
+
+                                const SizedBox(height: 14),
+
+                                // Remember Me & Forgot Password Row
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _rememberMe = !_rememberMe;
+                                          });
+                                        },
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              width: 18,
+                                              height: 18,
+                                              child: Checkbox(
+                                                value: _rememberMe,
+                                                activeColor: AppColors.accentBlue,
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    _rememberMe = val ?? false;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            const Flexible(
+                                              child: Text(
+                                                'Remember Me',
+                                                style: TextStyle(
+                                                  fontSize: 12.5,
+                                                  color: AppColors.textSecondary,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: _showForgotPasswordDialog,
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                        minimumSize: Size.zero,
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      child: const Text(
+                                        'Forgot Password?',
+                                        style: TextStyle(
+                                          fontSize: 12.5,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.accentBlue,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 22),
+
+                                // Login Button & Biometric Row
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 52,
+                                        decoration: BoxDecoration(
+                                          gradient: AppColors.primaryGradient,
+                                          borderRadius: BorderRadius.circular(16),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.primaryNavy.withValues(alpha: 0.28),
+                                              blurRadius: 14,
+                                              offset: const Offset(0, 5),
+                                            ),
+                                          ],
+                                        ),
+                                        child: ElevatedButton(
+                                          onPressed: _isLoading ? null : _handleLogin,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            foregroundColor: Colors.white,
+                                            minimumSize: const Size(double.infinity, 52),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(16),
+                                            ),
+                                            elevation: 0,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          child: _isLoading
+                                              ? const SizedBox(
+                                                  width: 22,
+                                                  height: 22,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2.5,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                  ),
+                                                )
+                                              : const FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        'Login to Account',
+                                                        style: TextStyle(
+                                                          fontSize: 15.5,
+                                                          fontWeight: FontWeight.w800,
+                                                          color: Colors.white,
+                                                          letterSpacing: 0.2,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Icon(Icons.arrow_forward_rounded, size: 19, color: Colors.white),
+                                                    ],
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    // Quick Biometric Unlock Button
+                                    InkWell(
+                                      onTap: _handleLogin,
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Container(
+                                        width: 52,
+                                        height: 52,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.softBlueBg,
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.3)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.accentBlue.withValues(alpha: 0.1),
+                                              blurRadius: 10,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
+                                        ),
+                                        child: const Icon(
+                                          Icons.fingerprint_rounded,
+                                          color: AppColors.accentBlue,
+                                          size: 28,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+
+                          const SizedBox(height: 20),
+
+                          // Create Account Link
+                          Center(
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                const Text(
+                                  "Don't have an account? ",
+                                  style: TextStyle(
+                                    fontSize: 13.5,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: _showCreateAccountDialog,
+                                  child: const Text(
+                                    'Create Account',
+                                    style: TextStyle(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.accentBlue,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 18),
+
+                          // 256-bit SSL Security Footnote Badge
+                          Center(
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 6,
+                              children: [
+                                const Icon(Icons.shield_outlined, size: 14, color: AppColors.textMuted),
+                                Text(
+                                  'Bank-grade 256-bit end-to-end encrypted',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary.withValues(alpha: 0.8),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

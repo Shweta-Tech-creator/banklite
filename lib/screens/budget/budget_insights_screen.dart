@@ -55,7 +55,11 @@ class BudgetInsightsScreen extends StatelessWidget {
                 banking.updateMonthlyBudget(amt);
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Monthly budget updated!'), backgroundColor: AppColors.successDark),
+                  const SnackBar(
+                    content: Text('Monthly budget updated!'),
+                    backgroundColor: AppColors.successDark,
+                    behavior: SnackBarBehavior.floating,
+                  ),
                 );
               }
             },
@@ -70,22 +74,22 @@ class BudgetInsightsScreen extends StatelessWidget {
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
       case 'food':
-        return Icons.restaurant;
+        return Icons.restaurant_outlined;
       case 'shopping':
-        return Icons.shopping_bag;
+        return Icons.shopping_bag_outlined;
       case 'bills':
-        return Icons.receipt_long;
+        return Icons.receipt_long_outlined;
       case 'travel':
-        return Icons.directions_car;
+        return Icons.directions_car_outlined;
       default:
-        return Icons.category;
+        return Icons.category_outlined;
     }
   }
 
   Color _getCategoryColor(String category) {
     switch (category.toLowerCase()) {
       case 'food':
-        return const Color(0xFFEF4444);
+        return AppColors.error;
       case 'shopping':
         return const Color(0xFF8B5CF6);
       case 'bills':
@@ -134,26 +138,27 @@ class BudgetInsightsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Monthly Budget Overview Card
+                // Signature Monthly Budget Overview Card
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFF0F172A),
-                        Color(0xFF1E293B),
-                        Color(0xFF0F3460),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    gradient: AppColors.luxuryCardGradient,
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.16),
+                      width: 1.2,
                     ),
-                    borderRadius: BorderRadius.circular(26),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryNavy.withValues(alpha: 0.25),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
+                        color: AppColors.primaryNavy.withValues(alpha: 0.35),
+                        blurRadius: 22,
+                        offset: const Offset(0, 10),
+                      ),
+                      BoxShadow(
+                        color: AppColors.accentBlue.withValues(alpha: 0.12),
+                        blurRadius: 30,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -197,21 +202,43 @@ class BudgetInsightsScreen extends StatelessWidget {
                         CurrencyFormatter.format(monthlyBudget),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.5,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.6,
                         ),
                       ),
                       const SizedBox(height: 18),
 
-                      // Progress Bar
+                      // Rounded Gradient Progress Bar
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: LinearProgressIndicator(
-                          value: (usagePercent / 100).clamp(0.0, 1.0),
-                          minHeight: 10,
-                          backgroundColor: Colors.white.withValues(alpha: 0.15),
-                          valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                        child: Container(
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              final ratio = (usagePercent / 100).clamp(0.0, 1.0);
+                              return Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  width: constraints.maxWidth * ratio,
+                                  decoration: BoxDecoration(
+                                    color: progressColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: progressColor.withValues(alpha: 0.5),
+                                        blurRadius: 6,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
 
@@ -228,12 +255,12 @@ class BudgetInsightsScreen extends StatelessWidget {
                                   'Total Spent',
                                   style: TextStyle(color: Colors.white60, fontSize: 12),
                                 ),
-                                const SizedBox(height: 3),
+                                const SizedBox(height: 4),
                                 Text(
                                   CurrencyFormatter.format(totalSpent),
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   maxLines: 1,
@@ -245,8 +272,8 @@ class BudgetInsightsScreen extends StatelessWidget {
                           Container(
                             height: 36,
                             width: 1,
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            color: Colors.white.withValues(alpha: 0.2),
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            color: Colors.white.withValues(alpha: 0.16),
                           ),
                           Expanded(
                             child: Column(
@@ -256,12 +283,12 @@ class BudgetInsightsScreen extends StatelessWidget {
                                   'Remaining',
                                   style: TextStyle(color: Colors.white60, fontSize: 12),
                                 ),
-                                const SizedBox(height: 3),
+                                const SizedBox(height: 4),
                                 Text(
                                   CurrencyFormatter.format(remaining),
                                   style: const TextStyle(
                                     color: AppColors.electricCyan,
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   maxLines: 1,
@@ -276,17 +303,30 @@ class BudgetInsightsScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 26),
 
                 // Category Breakdown Header
-                const Text(
-                  'Spending by Category',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                    letterSpacing: -0.2,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: AppColors.accentBlue,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Spending by Category',
+                      style: TextStyle(
+                        fontSize: 16.5,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 14),
 
@@ -302,8 +342,18 @@ class BudgetInsightsScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: AppColors.cardBorder),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: AppColors.cardBorder.withValues(alpha: 0.8),
+                        width: 1.0,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.02),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [
@@ -312,8 +362,19 @@ class BudgetInsightsScreen extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: color.withValues(alpha: 0.12),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    color.withValues(alpha: 0.16),
+                                    color.withValues(alpha: 0.06),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
                                 borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: color.withValues(alpha: 0.2),
+                                  width: 1,
+                                ),
                               ),
                               child: Icon(
                                 _getCategoryIcon(categoryName),
@@ -329,16 +390,17 @@ class BudgetInsightsScreen extends StatelessWidget {
                                   Text(
                                     categoryName,
                                     style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.5,
+                                      fontWeight: FontWeight.w700,
                                       color: AppColors.textPrimary,
+                                      letterSpacing: -0.2,
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 3),
                                   Text(
                                     '${categoryPercent.toStringAsFixed(1)}% of total spent',
                                     style: const TextStyle(
-                                      fontSize: 11,
+                                      fontSize: 11.5,
                                       color: AppColors.textSecondary,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -349,9 +411,10 @@ class BudgetInsightsScreen extends StatelessWidget {
                             Text(
                               CurrencyFormatter.format(spent),
                               style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 15.5,
+                                fontWeight: FontWeight.w800,
                                 color: AppColors.textPrimary,
+                                letterSpacing: -0.3,
                               ),
                             ),
                           ],
@@ -359,11 +422,27 @@ class BudgetInsightsScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: (categoryPercent / 100).clamp(0.0, 1.0),
-                            minHeight: 6,
-                            backgroundColor: AppColors.background,
-                            valueColor: AlwaysStoppedAnimation<Color>(color),
+                          child: Container(
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: AppColors.divider,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final ratio = (categoryPercent / 100).clamp(0.0, 1.0);
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    width: constraints.maxWidth * ratio,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],

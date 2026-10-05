@@ -92,45 +92,84 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
             child: Column(
               children: [
-                // User Profile Header Card
+                // Signature User Profile Header Card
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(22),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.cardBorder),
+                    borderRadius: BorderRadius.circular(26),
+                    border: Border.all(
+                      color: AppColors.cardBorder.withValues(alpha: 0.9),
+                      width: 1.0,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
-                        blurRadius: 10,
+                        color: const Color(0xFF0F172A).withValues(alpha: 0.03),
+                        blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: Column(
                     children: [
-                      // Avatar with verified badge
+                      // Avatar with gradient halo ring & verified emerald badge
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          CircleAvatar(
-                            radius: 44,
-                            backgroundColor: AppColors.primaryNavy,
-                            child: Text(
-                              user.name.trim().split(RegExp(r'\s+')).where((n) => n.isNotEmpty).map((n) => n[0].toUpperCase()).take(2).join(),
-                              style: const TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          Container(
+                            padding: const EdgeInsets.all(3.5),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: const LinearGradient(
+                                colors: [
+                                  AppColors.electricCyan,
+                                  AppColors.accentBlue,
+                                  AppColors.accentIndigo,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.accentBlue.withValues(alpha: 0.25),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 42,
+                              backgroundColor: AppColors.primaryNavy,
+                              child: Text(
+                                user.name
+                                    .trim()
+                                    .split(RegExp(r'\s+'))
+                                    .where((n) => n.isNotEmpty)
+                                    .map((n) => n[0].toUpperCase())
+                                    .take(2)
+                                    .join(),
+                                style: const TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: AppColors.successDark,
+                            decoration: BoxDecoration(
+                              color: AppColors.success,
                               shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2.2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.success.withValues(alpha: 0.45),
+                                  blurRadius: 4,
+                                ),
+                              ],
                             ),
                             child: const Icon(Icons.check, color: Colors.white, size: 14),
                           ),
@@ -138,60 +177,92 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 14),
 
-                      // Name & Tier
+                      // Name & Tier Badge
                       Text(
                         user.name,
                         style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w800,
                           color: AppColors.textPrimary,
+                          letterSpacing: -0.4,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 6),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          gradient: AppColors.accentGradient,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Text(
-                          user.customerTier.toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            letterSpacing: 0.8,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF06B6D4), Color(0xFF2563EB)],
                           ),
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.accentBlue.withValues(alpha: 0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.diamond_outlined, size: 12, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${user.customerTier.toUpperCase()} MEMBER',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 18),
 
                       const Divider(height: 1),
                       const SizedBox(height: 14),
 
                       // Email, Phone & Primary Account
                       _buildInfoRow(Icons.email_outlined, user.email),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       _buildInfoRow(Icons.phone_iphone_outlined, user.phone),
-                      const SizedBox(height: 8),
-                      _buildInfoRow(Icons.account_balance_outlined, 'Primary: ${selectedAcc.accountType} (${selectedAcc.maskedNumber})'),
+                      const SizedBox(height: 10),
+                      _buildInfoRow(
+                        Icons.account_balance_outlined,
+                        'Primary: ${selectedAcc.accountType} (${selectedAcc.maskedNumber})',
+                      ),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 22),
 
                 // Settings Options Group
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: AppColors.cardBorder),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: AppColors.cardBorder.withValues(alpha: 0.9),
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF0F172A).withValues(alpha: 0.025),
+                        blurRadius: 14,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Column(
                     children: [
                       _buildSettingsTile(
                         icon: Icons.badge_outlined,
+                        iconColor: AppColors.accentIndigo,
+                        bgColor: AppColors.softIndigoBg,
                         title: 'Personal Information & KYC',
                         subtitle: 'Full name, KYC verification & PAN details',
                         onTap: () => _showInfoModal(
@@ -203,6 +274,8 @@ class ProfileScreen extends StatelessWidget {
                       const Divider(height: 1),
                       _buildSettingsTile(
                         icon: Icons.shield_outlined,
+                        iconColor: const Color(0xFF0284C7),
+                        bgColor: const Color(0xFFE0F2FE),
                         title: 'Security & App PIN',
                         subtitle: 'Biometric Face ID, 2FA & PIN settings',
                         onTap: () => _showInfoModal(
@@ -214,6 +287,8 @@ class ProfileScreen extends StatelessWidget {
                       const Divider(height: 1),
                       _buildSettingsTile(
                         icon: Icons.notifications_none_outlined,
+                        iconColor: const Color(0xFFF59E0B),
+                        bgColor: const Color(0xFFFFFBEB),
                         title: 'Notification Preferences',
                         subtitle: 'Transaction SMS, push alerts & budget reminders',
                         onTap: () => _showInfoModal(
@@ -225,6 +300,8 @@ class ProfileScreen extends StatelessWidget {
                       const Divider(height: 1),
                       _buildSettingsTile(
                         icon: Icons.support_agent_rounded,
+                        iconColor: AppColors.successDark,
+                        bgColor: AppColors.successLight,
                         title: '24/7 Priority Support',
                         subtitle: 'Live banker chat, FAQs & toll-free line',
                         onTap: () => _showInfoModal(
@@ -237,20 +314,42 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 22),
 
-                // Logout Button
-                OutlinedButton.icon(
-                  onPressed: () => _showLogoutDialog(context),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.error,
-                    side: const BorderSide(color: AppColors.error, width: 1.5),
+                // Modern Tinted Logout Button
+                InkWell(
+                  onTap: () => _showLogoutDialog(context),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      color: AppColors.errorLight,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppColors.error.withValues(alpha: 0.35),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.logout_rounded, size: 18, color: AppColors.error),
+                        SizedBox(width: 8),
+                        Text(
+                          'Logout from Account',
+                          style: TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.error,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  icon: const Icon(Icons.logout, size: 18),
-                  label: const Text('Logout from Account'),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 18),
 
                 const Text(
                   'BankLite Digital Banking v2.4.1 • 256-bit SSL Encrypted',
@@ -272,13 +371,20 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: AppColors.textSecondary),
-        const SizedBox(width: 8),
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: AppColors.softBlueBg,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 15, color: AppColors.accentBlue),
+        ),
+        const SizedBox(width: 10),
         Expanded(
           child: Text(
             text,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 12.5,
               color: AppColors.textSecondary,
               fontWeight: FontWeight.w500,
             ),
@@ -290,6 +396,8 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildSettingsTile({
     required IconData icon,
+    required Color iconColor,
+    required Color bgColor,
     required String title,
     required String subtitle,
     required VoidCallback onTap,
@@ -297,30 +405,32 @@ class ProfileScreen extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(9),
           decoration: BoxDecoration(
-            color: AppColors.softBlueBg,
-            borderRadius: BorderRadius.circular(10),
+            color: bgColor,
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: AppColors.accentBlue, size: 20),
+          child: Icon(icon, color: iconColor, size: 20),
         ),
         title: Text(
           title,
           style: const TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
+            letterSpacing: -0.2,
           ),
         ),
         subtitle: Text(
           subtitle,
           style: const TextStyle(
-            fontSize: 11,
+            fontSize: 11.5,
             color: AppColors.textSecondary,
           ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.textMuted),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: AppColors.textMuted),
         onTap: onTap,
       ),
     );

@@ -392,19 +392,19 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
               children: [
                 // Account Information Card
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    gradient: AppColors.luxuryCardGradient,
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.16),
+                      width: 1.2,
                     ),
-                    borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                        color: AppColors.primaryNavy.withValues(alpha: 0.3),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
@@ -510,16 +510,16 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
                           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [Color(0xFFDC2626), Color(0xFFB91C1C)],
+                              colors: [Color(0xFFF43F5E), Color(0xFFE11D48)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFDC2626).withValues(alpha: 0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 3),
+                                color: const Color(0xFFF43F5E).withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
@@ -554,21 +554,21 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
                     Expanded(
                       child: InkWell(
                         onTap: _isDownloadingExcel ? null : _downloadExcel,
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [Color(0xFF059669), Color(0xFF047857)],
+                              colors: [Color(0xFF10B981), Color(0xFF059669)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF059669).withValues(alpha: 0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 3),
+                                color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
@@ -620,10 +620,10 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         visualDensity: VisualDensity.compact,
-                        foregroundColor: const Color(0xFF059669),
+                        foregroundColor: AppColors.accentBlue,
                       ),
                       icon: const Icon(Icons.email_outlined, size: 14),
-                      label: const Text('Email to Me', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                      label: const Text('Email to Me', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
@@ -639,17 +639,17 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
                           label: Text(period),
                           selected: isSelected,
                           onSelected: (_) => setState(() => _selectedPeriod = period),
-                          selectedColor: const Color(0xFF059669),
+                          selectedColor: AppColors.primaryNavy,
                           labelStyle: TextStyle(
                             color: isSelected ? Colors.white : AppColors.textPrimary,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                             fontSize: 12,
                           ),
-                          backgroundColor: const Color(0xFFF1F5F9),
+                          backgroundColor: Colors.white,
                           side: BorderSide(
-                            color: isSelected ? const Color(0xFF059669) : const Color(0xFFE2E8F0),
+                            color: isSelected ? AppColors.primaryNavy : AppColors.cardBorder,
                           ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                       );
                     }).toList(),
@@ -660,11 +660,18 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
 
                 // Period Summary Statistics
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.cardBorder),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.02),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
@@ -672,33 +679,33 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Total Inflow (+)', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                            const Text('Total Inflow (+)', style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
                             const SizedBox(height: 2),
                             Text(
                               '+${CurrencyFormatter.format(totalCredits)}',
                               style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF10B981),
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.successDark,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Container(width: 1, height: 32, color: Colors.grey[300]),
+                      Container(width: 1, height: 32, color: AppColors.divider),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Total Outflow (-)', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                            const Text('Total Outflow (-)', style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
                             const SizedBox(height: 2),
                             Text(
                               '-${CurrencyFormatter.format(totalDebits)}',
                               style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFEF4444),
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.error,
                               ),
                             ),
                           ],
@@ -820,75 +827,6 @@ class _AccountStatementSheetState extends State<AccountStatementSheet> {
                       ),
                     );
                   }),
-
-                // Recent Generated Statements from Firebase Cloud
-                if (banking.statements.isNotEmpty) ...[
-                  const SizedBox(height: 20),
-                  const Row(
-                    children: [
-                      Icon(Icons.cloud_done_rounded, size: 16, color: Color(0xFF059669)),
-                      SizedBox(width: 6),
-                      Text(
-                        'Cloud Statement History (Saved in Firebase)',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  ...banking.statements.take(5).map((stmt) {
-                    final isPdf = stmt.format == 'PDF';
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 6),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8FAFC),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            isPdf ? Icons.picture_as_pdf_rounded : Icons.table_chart_rounded,
-                            size: 18,
-                            color: isPdf ? const Color(0xFFDC2626) : const Color(0xFF059669),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  stmt.fileName,
-                                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  '${stmt.period} • ${DateFormat('dd MMM, hh:mm a').format(stmt.generatedAt)} • ${stmt.status}',
-                                  style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFECFDF5),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              'Synced',
-                              style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Color(0xFF059669)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
               ],
             ),
           ),

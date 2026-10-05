@@ -31,28 +31,36 @@ class _QuickActionButtonState extends State<QuickActionButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) {
-        setState(() => _isPressed = false);
+      onTap: () {
         HapticFeedback.lightImpact();
+        widget.onTap();
       },
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedScale(
-        scale: _isPressed ? 0.94 : 1.0,
-        duration: const Duration(milliseconds: 120),
+        scale: _isPressed ? 0.92 : 1.0,
+        duration: const Duration(milliseconds: 140),
         curve: Curves.easeOutCubic,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.cardBorder, width: 1),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: AppColors.cardBorder.withValues(alpha: 0.9),
+              width: 1.0,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: _isPressed ? 0.01 : 0.03),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+                color: widget.iconColor.withValues(alpha: _isPressed ? 0.05 : 0.12),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -60,17 +68,25 @@ class _QuickActionButtonState extends State<QuickActionButton> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Squircle Icon Badge with subtle gradient and inner glow
               Container(
-                width: 50,
-                height: 50,
+                width: 52,
+                height: 52,
                 decoration: BoxDecoration(
-                  color: widget.backgroundColor,
-                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    colors: [
+                      widget.backgroundColor,
+                      widget.backgroundColor.withValues(alpha: 0.7),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: widget.iconColor.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
+                      color: widget.iconColor.withValues(alpha: 0.22),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -96,6 +112,7 @@ class _QuickActionButtonState extends State<QuickActionButton> {
                   fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                   height: 1.25,
+                  letterSpacing: -0.2,
                 ),
               ),
             ],

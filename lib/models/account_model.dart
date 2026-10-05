@@ -60,4 +60,12 @@ class Account {
       ifscCode: map['ifscCode'] ?? 'BLTE0001234',
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Account && runtimeType == other.runtimeType && accountId == other.accountId;
+
+  @override
+  int get hashCode => accountId.hashCode;
 }

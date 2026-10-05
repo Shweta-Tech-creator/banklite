@@ -4,6 +4,8 @@ import '../models/transaction_model.dart';
 import '../theme/app_colors.dart';
 import '../utils/currency_formatter.dart';
 import '../utils/date_formatter.dart';
+import '../utils/file_downloader.dart';
+import '../utils/statement_generator.dart';
 import 'bank_logo_emblem.dart';
 
 class ReceiptDialog extends StatelessWidget {
@@ -166,6 +168,39 @@ class ReceiptDialog extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Buttons
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    try {
+                      final bytes = await StatementGenerator.generateReceiptPdf(transaction: transaction);
+                      FileDownloader.download(
+                        bytes: bytes,
+                        fileName: 'BankLite_Receipt_${transaction.transactionId}.pdf',
+                        mimeType: 'application/pdf',
+                      );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Receipt downloaded: BankLite_Receipt_${transaction.transactionId}.pdf'),
+                            backgroundColor: AppColors.successDark,
+                          ),
+                        );
+                        Navigator.pop(context);
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Download failed: $e')),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.download_rounded, size: 18),
+                  label: const Text('Download PDF Receipt'),
+                ),
+              ),
+              const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -179,20 +214,20 @@ class ReceiptDialog extends StatelessWidget {
                         );
                         Navigator.pop(context);
                       },
-                      icon: const Icon(Icons.copy_rounded, size: 18),
+                      icon: const Icon(Icons.copy_rounded, size: 16),
                       label: const Text('Copy'),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   Expanded(
-                    child: ElevatedButton.icon(
+                    child: OutlinedButton.icon(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('E-Receipt saved / shared successfully')),
+                          const SnackBar(content: Text('E-Receipt ready to share')),
                         );
                         Navigator.pop(context);
                       },
-                      icon: const Icon(Icons.share_rounded, size: 18),
+                      icon: const Icon(Icons.share_rounded, size: 16),
                       label: const Text('Share'),
                     ),
                   ),

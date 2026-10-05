@@ -10,9 +10,11 @@ class AppTheme {
       onPrimary: Colors.white,
       secondary: AppColors.accentBlue,
       onSecondary: Colors.white,
+      tertiary: AppColors.accentIndigo,
       surface: AppColors.surface,
       onSurface: AppColors.textPrimary,
       surfaceContainerLowest: Colors.white,
+      surfaceContainerLow: AppColors.surfaceSubtle,
       error: AppColors.error,
       onError: Colors.white,
       brightness: Brightness.light,
@@ -40,8 +42,8 @@ class AppTheme {
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: AppColors.cardBorder, width: 1),
+          borderRadius: BorderRadius.circular(22),
+          side: const BorderSide(color: AppColors.cardBorder, width: 1.0),
         ),
         margin: EdgeInsets.zero,
       ),
@@ -50,7 +52,7 @@ class AppTheme {
           backgroundColor: AppColors.primaryNavy,
           foregroundColor: Colors.white,
           elevation: 2,
-          shadowColor: AppColors.primaryNavy.withValues(alpha: 0.3),
+          shadowColor: AppColors.primaryNavy.withValues(alpha: 0.25),
           minimumSize: const Size(double.infinity, 54),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -93,23 +95,23 @@ class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.cardBorder, width: 1),
+          borderSide: const BorderSide(color: AppColors.cardBorder, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.cardBorder, width: 1),
+          borderSide: const BorderSide(color: AppColors.cardBorder, width: 1.0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.accentBlue, width: 2),
+          borderSide: const BorderSide(color: AppColors.accentBlue, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.error, width: 1),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.2),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.8),
         ),
         hintStyle: const TextStyle(
           color: AppColors.textMuted,
@@ -126,9 +128,8 @@ class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: Colors.white,
-        elevation: 10,
-        shadowColor: Colors.black.withValues(alpha: 0.08),
-        indicatorColor: AppColors.softBlueBg,
+        elevation: 0,
+        indicatorColor: AppColors.softIndigoBg,
         surfaceTintColor: Colors.transparent,
         height: 68,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {

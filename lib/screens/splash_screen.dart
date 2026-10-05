@@ -89,8 +89,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
     _bankFormController.forward();
 
-    // Transition to Dashboard (if logged in) or Login screen after 2.9s
-    _navTimer = Timer(const Duration(milliseconds: 2900), () {
+    // Transition to Dashboard (if logged in) or Login screen after 2.4s
+    _navTimer = Timer(const Duration(milliseconds: 2400), () {
       if (mounted) {
         final isLoggedIn = context.bankingRead.isLoggedIn;
         Navigator.of(context).pushReplacement(

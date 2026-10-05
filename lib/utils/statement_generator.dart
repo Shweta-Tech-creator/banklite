@@ -348,4 +348,144 @@ class StatementGenerator {
     }
     return value;
   }
+
+  /// Generate a professional official PDF E-Receipt for a transaction
+  static Future<Uint8List> generateReceiptPdf({
+    required TransactionItem transaction,
+    String bankName = 'BankLite National Bank',
+  }) async {
+    final pdf = pw.Document();
+    final dateFormat = DateFormat('dd MMM yyyy, hh:mm a');
+    final currencyFormat = NumberFormat('#,##,##0.00', 'en_IN');
+    final isCredit = transaction.isCredit;
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a5,
+        margin: const pw.EdgeInsets.all(28),
+        build: (pw.Context context) {
+          return pw.Container(
+            padding: const pw.EdgeInsets.all(22),
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(color: PdfColor.fromHex('#E2E8F0'), width: 1.5),
+              borderRadius: pw.BorderRadius.circular(16),
+            ),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'BANKLITE',
+                  style: pw.TextStyle(
+                    fontSize: 22,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromHex('#0B132B'),
+                  ),
+                ),
+                pw.Text(
+                  'OFFICIAL TRANSACTION E-RECEIPT',
+                  style: pw.TextStyle(
+                    fontSize: 8.5,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromHex('#64748B'),
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                pw.SizedBox(height: 14),
+                pw.Container(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColor.fromHex('#ECFDF5'),
+                    borderRadius: pw.BorderRadius.circular(12),
+                  ),
+                  child: pw.Text(
+                    'PAYMENT SUCCESSFUL',
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColor.fromHex('#059669'),
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 14),
+                pw.Text(
+                  '${isCredit ? '+' : '-'}Rs ${currencyFormat.format(transaction.amount)}',
+                  style: pw.TextStyle(
+                    fontSize: 24,
+                    fontWeight: pw.FontWeight.bold,
+                    color: isCredit ? PdfColor.fromHex('#059669') : PdfColor.fromHex('#0B132B'),
+                  ),
+                ),
+                pw.SizedBox(height: 2),
+                pw.Text(
+                  transaction.title,
+                  style: pw.TextStyle(
+                    fontSize: 12,
+                    color: PdfColor.fromHex('#475569'),
+                  ),
+                ),
+                pw.SizedBox(height: 14),
+                pw.Divider(color: PdfColor.fromHex('#E2E8F0'), thickness: 1),
+                pw.SizedBox(height: 8),
+                _buildPdfReceiptRow('Transaction Reference ID', transaction.transactionId),
+                _buildPdfReceiptRow('Date & Time', dateFormat.format(transaction.date)),
+                _buildPdfReceiptRow('Type', isCredit ? 'Credit (Deposit)' : 'Debit (Payment)'),
+                _buildPdfReceiptRow('Category', transaction.category),
+                _buildPdfReceiptRow('Payment Method', transaction.paymentMethod),
+                if (transaction.recipientOrSender.isNotEmpty)
+                  _buildPdfReceiptRow(isCredit ? 'Sender' : 'Recipient', transaction.recipientOrSender),
+                if (transaction.note.isNotEmpty)
+                  _buildPdfReceiptRow('Note / Remarks', transaction.note),
+                pw.SizedBox(height: 8),
+                pw.Divider(color: PdfColor.fromHex('#E2E8F0'), thickness: 1),
+                pw.SizedBox(height: 14),
+                pw.Text(
+                  'Digitally certified & verified by BankLite Core Banking System',
+                  style: pw.TextStyle(
+                    fontSize: 8,
+                    color: PdfColor.fromHex('#94A3B8'),
+                  ),
+                ),
+                pw.SizedBox(height: 2),
+                pw.Text(
+                  'This is an electronic receipt and requires no physical signature.',
+                  style: pw.TextStyle(
+                    fontSize: 7.5,
+                    color: PdfColor.fromHex('#94A3B8'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  static pw.Widget _buildPdfReceiptRow(String label, String value) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 3.5),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontSize: 9.5,
+              color: PdfColor.fromHex('#64748B'),
+            ),
+          ),
+          pw.Text(
+            value,
+            style: pw.TextStyle(
+              fontSize: 9.5,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColor.fromHex('#0F172A'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -44,40 +44,62 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
                 child: Column(
                   children: [
-                    // SearchBar
-                    TextField(
-                      controller: _searchController,
-                      onChanged: (val) {
-                        banking.setSearchQuery(val);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search by merchant, note, or ID...',
-                        prefixIcon: const Icon(Icons.search, size: 22, color: AppColors.textSecondary),
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear, size: 18),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  banking.setSearchQuery('');
-                                },
-                              )
-                            : null,
-                        fillColor: Colors.white,
-                        filled: true,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    // SearchBar with delicate shadow
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.02),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (val) {
+                          banking.setSearchQuery(val);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search by merchant, note, or ID...',
+                          prefixIcon: const Icon(Icons.search, size: 22, color: AppColors.textSecondary),
+                          suffixIcon: _searchController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear, size: 18),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    banking.setSearchQuery('');
+                                  },
+                                )
+                              : null,
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        ),
                       ),
                     ),
 
                     const SizedBox(height: 12),
 
-                    // Luxury High-Contrast Segmented Filter Bar
+                    // Modern Segmented Filter Bar
                     Container(
-                      height: 44,
+                      height: 46,
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: AppColors.cardBorder.withValues(alpha: 0.9),
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.02),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: _filters.map((filter) {
@@ -92,14 +114,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 duration: const Duration(milliseconds: 200),
                                 curve: Curves.easeInOut,
                                 decoration: BoxDecoration(
-                                  color: isSelected ? const Color(0xFF0F172A) : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(9),
+                                  gradient: isSelected ? AppColors.primaryGradient : null,
+                                  borderRadius: BorderRadius.circular(10),
                                   boxShadow: isSelected
                                       ? [
                                           BoxShadow(
-                                            color: Colors.black.withValues(alpha: 0.12),
-                                            blurRadius: 4,
-                                            offset: const Offset(0, 2),
+                                            color: AppColors.primaryNavy.withValues(alpha: 0.22),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 3),
                                           ),
                                         ]
                                       : null,
@@ -110,7 +132,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                                    color: isSelected ? Colors.white : const Color(0xFF64748B),
+                                    color: isSelected ? Colors.white : AppColors.textSecondary,
                                     letterSpacing: -0.1,
                                   ),
                                 ),
@@ -136,14 +158,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: const BoxDecoration(
+                                padding: const EdgeInsets.all(22),
+                                decoration: BoxDecoration(
                                   color: AppColors.softBlueBg,
                                   shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.15)),
                                 ),
                                 child: const Icon(
                                   Icons.receipt_long_outlined,
-                                  size: 48,
+                                  size: 44,
                                   color: AppColors.accentBlue,
                                 ),
                               ),
@@ -151,18 +174,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               const Text(
                                 'No Transactions Found',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.5,
+                                  fontWeight: FontWeight.w800,
                                   color: AppColors.textPrimary,
+                                  letterSpacing: -0.2,
                                 ),
                               ),
                               const SizedBox(height: 6),
                               const Text(
-                                'Try searching for a different keyword or resetting your filter.',
+                                'Try clearing your search query or selecting a different filter.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: AppColors.textSecondary,
+                                  height: 1.4,
                                 ),
                               ),
                             ],
@@ -170,7 +195,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
                         itemCount: filteredList.length,
                         itemBuilder: (context, index) {
                           final txn = filteredList[index];

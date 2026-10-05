@@ -26,9 +26,9 @@ class BankLogoEmblem extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: const LinearGradient(
           colors: [
-            Color(0xFF0F172A), // Obsidian Navy
-            Color(0xFF003B73), // Deep Royal Navy
-            Color(0xFF0066FF), // Electric Royal Blue
+            Color(0xFF0B132B), // Deep Obsidian
+            Color(0xFF1E3A8A), // Deep Royal Navy
+            Color(0xFF2563EB), // Vibrant Electric Sapphire
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

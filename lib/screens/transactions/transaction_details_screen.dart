@@ -4,6 +4,8 @@ import '../../models/transaction_model.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/currency_formatter.dart';
 import '../../utils/date_formatter.dart';
+import '../../utils/file_downloader.dart';
+import '../../utils/statement_generator.dart';
 import '../../widgets/receipt_dialog.dart';
 import '../../widgets/responsive_wrapper.dart';
 
@@ -223,10 +225,34 @@ class TransactionDetailsScreen extends StatelessWidget {
 
                 // Action Buttons
                 ElevatedButton.icon(
-                  onPressed: () {
-                    ReceiptDialog.show(context, transaction);
+                  onPressed: () async {
+                    try {
+                      final bytes = await StatementGenerator.generateReceiptPdf(transaction: transaction);
+                      FileDownloader.download(
+                        bytes: bytes,
+                        fileName: 'BankLite_Receipt_${transaction.transactionId}.pdf',
+                        mimeType: 'application/pdf',
+                      );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('E-Receipt downloaded: BankLite_Receipt_${transaction.transactionId}.pdf'),
+                            backgroundColor: AppColors.successDark,
+                            action: SnackBarAction(
+                              label: 'View',
+                              textColor: Colors.white,
+                              onPressed: () => ReceiptDialog.show(context, transaction),
+                            ),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ReceiptDialog.show(context, transaction);
+                      }
+                    }
                   },
-                  icon: const Icon(Icons.receipt_long, size: 18),
+                  icon: const Icon(Icons.download_rounded, size: 18),
                   label: const Text('Download / Share E-Receipt'),
                 ),
 

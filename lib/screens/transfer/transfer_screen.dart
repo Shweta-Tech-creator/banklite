@@ -101,6 +101,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   SnackBar(
                     content: Text('${newBen.name} added to beneficiaries'),
                     backgroundColor: AppColors.successDark,
+                    behavior: SnackBarBehavior.floating,
                   ),
                 );
               }
@@ -135,6 +136,7 @@ class _TransferScreenState extends State<TransferScreen> {
           SnackBar(
             content: Text('Insufficient balance! Max available: ${CurrencyFormatter.format(_selectedAccount!.balance)}'),
             backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
           ),
         );
         return;
@@ -165,6 +167,27 @@ class _TransferScreenState extends State<TransferScreen> {
     }
   }
 
+  LinearGradient _getBeneficiaryGradient(String name) {
+    final lower = name.toLowerCase();
+    if (lower.contains('rahul')) {
+      return const LinearGradient(colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)]);
+    } else if (lower.contains('priya')) {
+      return const LinearGradient(colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)]);
+    } else if (lower.contains('ankit')) {
+      return const LinearGradient(colors: [Color(0xFF0D9488), Color(0xFF047857)]);
+    }
+    // Dynamic fallback gradient based on hash
+    final hash = name.hashCode.abs();
+    final gradients = [
+      const LinearGradient(colors: [Color(0xFF3B82F6), Color(0xFF1E40AF)]),
+      const LinearGradient(colors: [Color(0xFFEC4899), Color(0xFFBE185D)]),
+      const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFD97706)]),
+      const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF047857)]),
+      const LinearGradient(colors: [Color(0xFF6366F1), Color(0xFF4338CA)]),
+    ];
+    return gradients[hash % gradients.length];
+  }
+
   @override
   Widget build(BuildContext context) {
     final banking = context.banking;
@@ -183,28 +206,33 @@ class _TransferScreenState extends State<TransferScreen> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Available Balance Preview Card
+                  // Signature Luxury Available Balance Preview Card
                   if (_selectedAccount != null)
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(18),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                        gradient: AppColors.luxuryCardGradient,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.16),
+                          width: 1.2,
                         ),
-                        borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 12,
+                            color: AppColors.primaryNavy.withValues(alpha: 0.35),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                          BoxShadow(
+                            color: AppColors.accentBlue.withValues(alpha: 0.12),
+                            blurRadius: 28,
                             offset: const Offset(0, 4),
                           ),
                         ],
@@ -212,27 +240,44 @@ class _TransferScreenState extends State<TransferScreen> {
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(13),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.12),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.18),
+                                  Colors.white.withValues(alpha: 0.08),
+                                ],
+                              ),
                               shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.22),
+                                width: 1,
+                              ),
                             ),
-                            child: const Icon(Icons.account_balance_wallet, color: AppColors.electricCyan, size: 22),
+                            child: const Icon(
+                              Icons.account_balance_wallet_rounded,
+                              color: AppColors.electricCyan,
+                              size: 24,
+                            ),
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Available in ${_selectedAccount!.accountType}',
-                                style: const TextStyle(fontSize: 12, color: Colors.white70, fontWeight: FontWeight.w500),
+                                style: const TextStyle(
+                                  fontSize: 12.5,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              const SizedBox(height: 3),
+                              const SizedBox(height: 4),
                               Text(
                                 CurrencyFormatter.format(_selectedAccount!.balance),
                                 style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
                                   color: Colors.white,
                                   letterSpacing: -0.5,
                                 ),
@@ -248,11 +293,17 @@ class _TransferScreenState extends State<TransferScreen> {
                   // From Account Dropdown
                   const Text(
                     'Debit From Account',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<Account>(
-                    initialValue: _selectedAccount,
+                    initialValue: accounts.any((a) => a.accountId == _selectedAccount?.accountId)
+                        ? accounts.firstWhere((a) => a.accountId == _selectedAccount?.accountId)
+                        : (accounts.isNotEmpty ? accounts.first : null),
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.account_balance_outlined),
                     ),
@@ -278,7 +329,11 @@ class _TransferScreenState extends State<TransferScreen> {
                     children: [
                       const Text(
                         'Select Beneficiary',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                       GestureDetector(
                         onTap: _showAddBeneficiaryDialog,
@@ -288,7 +343,11 @@ class _TransferScreenState extends State<TransferScreen> {
                             SizedBox(width: 4),
                             Text(
                               'Add New',
-                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.accentBlue),
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.accentBlue,
+                              ),
                             ),
                           ],
                         ),
@@ -297,9 +356,9 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Horizontal Beneficiary Avatar Carousel
+                  // Horizontal Beneficiary Avatar Carousel with vibrant avatars
                   SizedBox(
-                    height: 100,
+                    height: 104,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: beneficiaries.length + 1,
@@ -309,21 +368,24 @@ class _TransferScreenState extends State<TransferScreen> {
                           // Add New Beneficiary tile
                           return InkWell(
                             onTap: _showAddBeneficiaryDialog,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(20),
                             child: Container(
-                              width: 80,
+                              width: 86,
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: AppColors.cardBorder, style: BorderStyle.solid),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: AppColors.accentBlue.withValues(alpha: 0.35),
+                                  width: 1.2,
+                                ),
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    width: 42,
-                                    height: 42,
+                                    width: 44,
+                                    height: 44,
                                     decoration: BoxDecoration(
                                       color: AppColors.softBlueBg,
                                       shape: BoxShape.circle,
@@ -333,7 +395,11 @@ class _TransferScreenState extends State<TransferScreen> {
                                   const SizedBox(height: 6),
                                   const Text(
                                     'Add New',
-                                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.accentBlue),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.accentBlue,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -343,50 +409,75 @@ class _TransferScreenState extends State<TransferScreen> {
 
                         final ben = beneficiaries[index];
                         final isSelected = _selectedBeneficiary?.id == ben.id;
+                        final avatarGradient = _getBeneficiaryGradient(ben.name);
 
                         return InkWell(
                           onTap: () {
                             HapticFeedback.selectionClick();
                             setState(() => _selectedBeneficiary = ben);
                           },
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(20),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            width: 84,
-                            padding: const EdgeInsets.all(8),
+                            width: 88,
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                             decoration: BoxDecoration(
                               color: isSelected ? AppColors.softBlueBg : Colors.white,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                 color: isSelected ? AppColors.accentBlue : AppColors.cardBorder,
-                                width: isSelected ? 2 : 1,
+                                width: isSelected ? 2.0 : 1.0,
                               ),
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
-                                        color: AppColors.accentBlue.withValues(alpha: 0.15),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 3),
+                                        color: AppColors.accentBlue.withValues(alpha: 0.22),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
                                       ),
                                     ]
-                                  : null,
+                                  : [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.02),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: isSelected ? AppColors.accentBlue : AppColors.primaryNavy,
-                                  child: Text(
-                                    ben.initials,
-                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    gradient: avatarGradient,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.15),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      ben.initials,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   ben.name.split(' ').first,
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 11.5,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                                     color: isSelected ? AppColors.accentBlue : AppColors.textPrimary,
                                   ),
@@ -395,7 +486,11 @@ class _TransferScreenState extends State<TransferScreen> {
                                 ),
                                 Text(
                                   ben.maskedNumber,
-                                  style: const TextStyle(fontSize: 9, color: AppColors.textSecondary),
+                                  style: const TextStyle(
+                                    fontSize: 9.5,
+                                    color: AppColors.textSecondary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ],
                             ),
@@ -405,12 +500,16 @@ class _TransferScreenState extends State<TransferScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 24),
 
                   // Amount Input
                   const Text(
                     'Amount to Transfer (₹)',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -419,17 +518,28 @@ class _TransferScreenState extends State<TransferScreen> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                     ],
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.primaryNavy),
-                    decoration: const InputDecoration(
-                      prefixIcon: Padding(
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                      letterSpacing: -0.5,
+                    ),
+                    decoration: InputDecoration(
+                      prefixIcon: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         child: Text(
                           '₹',
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.primaryNavy),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ),
-                      prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
+                      prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
                       hintText: '0.00',
+                      fillColor: Colors.white,
+                      filled: true,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -451,30 +561,44 @@ class _TransferScreenState extends State<TransferScreen> {
                   // Quick Amount Chips
                   Wrap(
                     spacing: 8,
+                    runSpacing: 8,
                     children: [500, 1000, 2000, 5000].map((amt) {
+                      final isCurrent = _amountController.text == amt.toString();
                       return ActionChip(
                         label: Text('+₹$amt'),
                         onPressed: () {
+                          HapticFeedback.selectionClick();
                           setState(() {
                             _amountController.text = amt.toString();
                           });
                         },
-                        backgroundColor: Colors.white,
+                        backgroundColor: isCurrent ? AppColors.softBlueBg : Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
-                          side: const BorderSide(color: AppColors.cardBorder),
+                          side: BorderSide(
+                            color: isCurrent ? AppColors.accentBlue : AppColors.cardBorder,
+                            width: isCurrent ? 1.5 : 1.0,
+                          ),
                         ),
-                        labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primaryNavy),
+                        labelStyle: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: isCurrent ? AppColors.accentBlue : AppColors.textPrimary,
+                        ),
                       );
                     }).toList(),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 22),
 
                   // Transfer Note (Optional)
                   const Text(
                     'Transfer Note (Optional)',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -482,24 +606,56 @@ class _TransferScreenState extends State<TransferScreen> {
                     decoration: const InputDecoration(
                       hintText: 'e.g. Project fee, Rent, Dinner',
                       prefixIcon: Icon(Icons.edit_note_rounded),
+                      fillColor: Colors.white,
+                      filled: true,
                     ),
                   ),
 
                   const SizedBox(height: 32),
 
-                  // Continue Button
-                  ElevatedButton(
-                    onPressed: _onContinue,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Continue to Review'),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward_rounded, size: 18),
+                  // Continue to Review Button
+                  Container(
+                    height: 54,
+                    decoration: BoxDecoration(
+                      gradient: AppColors.primaryGradient,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryNavy.withValues(alpha: 0.28),
+                          blurRadius: 14,
+                          offset: const Offset(0, 6),
+                        ),
                       ],
                     ),
+                    child: ElevatedButton(
+                      onPressed: _onContinue,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Continue to Review',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward_rounded, size: 19, color: Colors.white),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

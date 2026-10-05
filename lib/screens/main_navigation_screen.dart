@@ -51,17 +51,29 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: Colors.white,
+            border: Border(
+              top: BorderSide(
+                color: AppColors.cardBorder.withValues(alpha: 0.8),
+                width: 1.0,
+              ),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 16,
-                offset: const Offset(0, -3),
+                color: const Color(0xFF0F172A).withValues(alpha: 0.05),
+                blurRadius: 20,
+                offset: const Offset(0, -4),
               ),
             ],
           ),
           child: NavigationBar(
             selectedIndex: _currentIndex,
             onDestinationSelected: _onTabSelected,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            indicatorColor: AppColors.softIndigoBg,
+            indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             destinations: const [
               NavigationDestination(
                 icon: Icon(Icons.home_outlined),

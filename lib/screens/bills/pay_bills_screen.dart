@@ -85,7 +85,7 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
       case 'gas':
         return Icons.local_fire_department_rounded;
       default:
-        return Icons.receipt_long;
+        return Icons.receipt_long_rounded;
     }
   }
 
@@ -111,6 +111,7 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
           SnackBar(
             content: Text('Insufficient balance in ${_selectedAccount!.accountType}'),
             backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
           ),
         );
         return;
@@ -164,7 +165,7 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -175,14 +176,15 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                     'Select Utility Category',
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
+                      letterSpacing: -0.2,
                     ),
                   ),
                   const SizedBox(height: 12),
 
                   SizedBox(
-                    height: 94,
+                    height: 98,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: categories.length,
@@ -196,41 +198,59 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                             HapticFeedback.selectionClick();
                             _onCategorySelected(cat);
                           },
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(20),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            width: 82,
+                            width: 86,
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primaryNavy : Colors.white,
-                              borderRadius: BorderRadius.circular(18),
+                              gradient: isSelected ? AppColors.primaryGradient : null,
+                              color: isSelected ? null : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: isSelected ? AppColors.primaryNavy : AppColors.cardBorder,
-                                width: 1.5,
+                                color: isSelected
+                                    ? AppColors.primaryNavy
+                                    : AppColors.cardBorder.withValues(alpha: 0.9),
+                                width: isSelected ? 1.5 : 1.0,
                               ),
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
-                                        color: AppColors.primaryNavy.withValues(alpha: 0.25),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
+                                        color: AppColors.primaryNavy.withValues(alpha: 0.28),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 5),
                                       ),
                                     ]
-                                  : null,
+                                  : [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.02),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  _getCategoryIcon(cat.id),
-                                  color: isSelected ? AppColors.electricCyan : AppColors.accentBlue,
-                                  size: 28,
+                                Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? Colors.white.withValues(alpha: 0.12)
+                                        : AppColors.softBlueBg,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    _getCategoryIcon(cat.id),
+                                    color: isSelected ? AppColors.electricCyan : AppColors.accentBlue,
+                                    size: 24,
+                                  ),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
                                   cat.name,
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: 11.5,
                                     fontWeight: FontWeight.w700,
                                     color: isSelected ? Colors.white : AppColors.textPrimary,
                                   ),
@@ -249,15 +269,18 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
 
                   // Form Details Section Card
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(22),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: AppColors.cardBorder),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: AppColors.cardBorder.withValues(alpha: 0.9),
+                        width: 1.0,
+                      ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.02),
-                          blurRadius: 10,
+                          color: const Color(0xFF0F172A).withValues(alpha: 0.03),
+                          blurRadius: 14,
                           offset: const Offset(0, 4),
                         ),
                       ],
@@ -268,7 +291,7 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                         // Provider Dropdown
                         const Text(
                           'Select Provider / Operator',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                         ),
                         const SizedBox(height: 8),
                         DropdownButtonFormField<String>(
@@ -279,38 +302,51 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                           items: _selectedCategory.providers.map((p) {
                             return DropdownMenuItem<String>(
                               value: p,
-                              child: Text(p, style: const TextStyle(fontSize: 14)),
+                              child: Text(p, style: const TextStyle(fontSize: 13.5)),
                             );
                           }).toList(),
-                          onChanged: (val) {
+                          onChanged: (p) {
                             setState(() {
-                              _selectedProvider = val;
+                              _selectedProvider = p;
                             });
                           },
-                          validator: (val) => val == null ? 'Please select bill provider' : null,
+                          validator: (p) => p == null ? 'Please select provider' : null,
                         ),
 
                         const SizedBox(height: 18),
 
-                        // Consumer Number TextField
+                        // Consumer Account / ID Number
                         const Text(
-                          'Consumer ID / Account / CA Number',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                          'Consumer ID / Account Number',
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
                           controller: _consumerNumberController,
-                          keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter consumer/account number',
-                            prefixIcon: Icon(Icons.badge_outlined),
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: 'e.g. 10-digit consumer ID',
+                            prefixIcon: const Icon(Icons.tag_rounded),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.qr_code_scanner, size: 20),
+                              tooltip: 'Scan Bill QR',
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Simulated: Consumer ID scanned from paper bill'),
+                                    duration: Duration(seconds: 2),
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                           validator: (val) {
                             if (val == null || val.trim().isEmpty) {
                               return 'Please enter consumer number';
                             }
-                            if (val.trim().length < 4) {
-                              return 'Enter a valid identifier';
+                            if (val.trim().length < 6) {
+                              return 'Consumer number must be at least 6 digits';
                             }
                             return null;
                           },
@@ -321,7 +357,7 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                         // Bill Amount
                         const Text(
                           'Bill Amount (₹)',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
@@ -330,13 +366,13 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                           ],
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryNavy),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
                           decoration: const InputDecoration(
                             prefixIcon: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                               child: Text(
                                 '₹',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryNavy),
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
                               ),
                             ),
                             prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
@@ -359,19 +395,23 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                         // Payment Account
                         const Text(
                           'Payment Account',
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                         ),
                         const SizedBox(height: 8),
                         DropdownButtonFormField<Account>(
-                          initialValue: _selectedAccount,
+                          initialValue: accounts.any((a) => a.accountId == _selectedAccount?.accountId)
+                              ? accounts.firstWhere((a) => a.accountId == _selectedAccount?.accountId)
+                              : (accounts.isNotEmpty ? accounts.first : null),
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.account_balance_wallet_outlined),
                           ),
                           items: accounts.map((acc) {
                             return DropdownMenuItem<Account>(
                               value: acc,
-                              child: Text('${acc.accountType} (${CurrencyFormatter.format(acc.balance)})',
-                                  style: const TextStyle(fontSize: 13)),
+                              child: Text(
+                                '${acc.accountType} (${CurrencyFormatter.format(acc.balance)})',
+                                style: const TextStyle(fontSize: 13),
+                              ),
                             );
                           }).toList(),
                           onChanged: (acc) {
@@ -389,53 +429,67 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
 
                   // Calculation Summary Breakdown Card
                   Container(
-                    padding: const EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.softBlueBg,
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.2)),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(
+                        color: AppColors.cardBorder.withValues(alpha: 0.9),
+                        width: 1.0,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF0F172A).withValues(alpha: 0.03),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Bill Amount', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                            const Text('Bill Amount', style: TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
                             Text(
                               CurrencyFormatter.format(double.tryParse(_amountController.text.trim()) ?? 0.0),
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                              style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Convenience Fee', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                            const Text('Convenience Fee', style: TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
                             Text(
                               _fee == 0 ? 'FREE' : CurrencyFormatter.format(_fee),
                               style: TextStyle(
                                 fontSize: 13,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w700,
                                 color: _fee == 0 ? AppColors.successDark : AppColors.textPrimary,
                               ),
                             ),
                           ],
                         ),
-                        const Divider(height: 20, color: AppColors.cardBorder),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               'Total Amount Payable',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
                             ),
                             Text(
                               CurrencyFormatter.format(_total),
                               style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w800,
                                 color: AppColors.primaryNavy,
+                                letterSpacing: -0.4,
                               ),
                             ),
                           ],
@@ -447,18 +501,48 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
                   const SizedBox(height: 28),
 
                   // Continue to Payment Button
-                  ElevatedButton(
-                    onPressed: _onContinueToPayment,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Continue to Payment'),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward_rounded, size: 18),
+                  Container(
+                    height: 54,
+                    decoration: BoxDecoration(
+                      gradient: AppColors.primaryGradient,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryNavy.withValues(alpha: 0.28),
+                          blurRadius: 14,
+                          offset: const Offset(0, 6),
+                        ),
                       ],
                     ),
+                    child: ElevatedButton(
+                      onPressed: _onContinueToPayment,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Continue to Payment',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.2,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward_rounded, size: 19, color: Colors.white),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
